@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import retrofit2.Call;
@@ -16,10 +17,12 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private EditText id, passwd;
-    private Button btnOk;
-    private String strId, strPass;
+    private EditText idGet, passGet, id, passwd, idDonor, passDonor, idRecipient, jumlah;
+    private Button btnGet, btnOk, btnTrans;
+    private TextView saldo;
+    private String strGetId, strGetPass, strId, strPass, strIdDonor, strPassDonor, strIdRecipient, strJumlah;
     private Context context;
+    private ModelResponse modelResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +30,45 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         context = this;
+
+        idGet = findViewById(R.id.getid);
+        passGet = findViewById(R.id.getpass);
+        btnGet = findViewById(R.id.btnget);
+        saldo = findViewById(R.id.result);
+
         id = findViewById(R.id.id);
         passwd = findViewById(R.id.passwd);
         btnOk = findViewById(R.id.go);
 
+        idDonor = findViewById(R.id.iddonor);
+        passDonor = findViewById(R.id.passdonor);
+        idRecipient = findViewById(R.id.idrecipient);
+        jumlah = findViewById(R.id.jumlah);
+        btnTrans = findViewById(R.id.btnTrans);
+
         final ApiInterface apiClient = ApiClient.getClient().create(ApiInterface.class);
+
+        btnGet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                strGetId = idGet.getText().toString();
+                strGetPass = passGet.getText().toString();
+                Call<ModelResponse> call = apiClient.getSaldo(strGetId, strGetPass);
+                call.enqueue(new Callback<ModelResponse>() {
+                    @Override
+                    public void onResponse(Call<ModelResponse> call, Response<ModelResponse> response) {
+                        modelResponse = response.body();
+                        saldo.setText("Saldo Anda adalah : " + modelResponse.getSaldo());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t);
+                        Toast.makeText(context, "Isinya : " + t, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +90,31 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        btnTrans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                strIdDonor = idDonor.getText().toString();
+                strPassDonor = passDonor.getText().toString();
+                strIdRecipient = idRecipient.getText().toString();
+                strJumlah = jumlah.getText().toString();
+
+                Call<Model> call = apiClient.transferCoin(strIdDonor, strPassDonor, strIdRecipient, strJumlah);
+                call.enqueue(new Callback<Model>() {
+                    @Override
+                    public void onResponse(Call<Model> call, Response<Model> response) {
+                        Log.d(TAG, "onResponse: " + response.body());
+                        Toast.makeText(context, "Isinya : " + response.body(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Model> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t);
+                        Toast.makeText(context, "Isinya : " + t, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 

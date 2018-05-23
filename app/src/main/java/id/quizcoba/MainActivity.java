@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private EditText idGet, passGet, id, passwd, idDonor, passDonor, idRecipient, jumlah;
     private Button btnGet, btnOk, btnTrans;
-    private TextView saldo;
+    private TextView saldo, akun, trans;
     private String strGetId, strGetPass, strId, strPass, strIdDonor, strPassDonor, strIdRecipient, strJumlah;
     private Context context;
     private ModelResponse modelResponse;
@@ -39,12 +39,14 @@ public class MainActivity extends AppCompatActivity {
         id = findViewById(R.id.id);
         passwd = findViewById(R.id.passwd);
         btnOk = findViewById(R.id.go);
+        akun = findViewById(R.id.responakun);
 
         idDonor = findViewById(R.id.iddonor);
         passDonor = findViewById(R.id.passdonor);
         idRecipient = findViewById(R.id.idrecipient);
         jumlah = findViewById(R.id.jumlah);
         btnTrans = findViewById(R.id.btnTrans);
+        trans = findViewById(R.id.respontrans);
 
         final ApiInterface apiClient = ApiClient.getClient().create(ApiInterface.class);
 
@@ -75,16 +77,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 strId = id.getText().toString();
                 strPass = passwd.getText().toString();
-                Call<Model> call = apiClient.postAccount(strId,strPass);
-                call.enqueue(new Callback<Model>() {
+                Call<ModelResponse> call = apiClient.postAccount(strId,strPass);
+                call.enqueue(new Callback<ModelResponse>() {
                     @Override
-                    public void onResponse(Call<Model> call, Response<Model> response) {
+                    public void onResponse(Call<ModelResponse> call, Response<ModelResponse> response) {
+                        modelResponse = response.body();
+                        akun.setText(modelResponse.getRespon());
                         Log.d(TAG, "onResponse: " + response.body());
                         Toast.makeText(context, "Isinya : " + response.body(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onFailure(Call<Model> call, Throwable t) {
+                    public void onFailure(Call<ModelResponse> call, Throwable t) {
                         Log.d(TAG, "onFailure: " + t);
                         Toast.makeText(context, "Isinya : " + t, Toast.LENGTH_SHORT).show();
                     }
@@ -101,16 +105,18 @@ public class MainActivity extends AppCompatActivity {
                 strIdRecipient = idRecipient.getText().toString();
                 strJumlah = jumlah.getText().toString();
 
-                Call<Model> call = apiClient.transferCoin(strIdDonor, strPassDonor, strIdRecipient, strJumlah);
-                call.enqueue(new Callback<Model>() {
+                Call<ModelResponse> call = apiClient.transferCoin(strIdDonor, strPassDonor, strIdRecipient, strJumlah);
+                call.enqueue(new Callback<ModelResponse>() {
                     @Override
-                    public void onResponse(Call<Model> call, Response<Model> response) {
+                    public void onResponse(Call<ModelResponse> call, Response<ModelResponse> response) {
+                        modelResponse = response.body();
+                        trans.setText(modelResponse.getRespon());
                         Log.d(TAG, "onResponse: " + response.body());
                         Toast.makeText(context, "Isinya : " + response.body(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onFailure(Call<Model> call, Throwable t) {
+                    public void onFailure(Call<ModelResponse> call, Throwable t) {
                         Log.d(TAG, "onFailure: " + t);
                         Toast.makeText(context, "Isinya : " + t, Toast.LENGTH_SHORT).show();
                     }

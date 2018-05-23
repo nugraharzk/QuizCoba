@@ -70,6 +70,14 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/responakun"
+                android:padding="5dp"
+                android:text="RESPONSE"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
                 android:layout_marginTop="20dp"
                 android:text="Transfer Coin"
                 android:layout_width="wrap_content"
@@ -99,6 +107,14 @@
                 android:text="Transfer"
                 android:id="@+id/btnTrans"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/respontrans"
+                android:text="RESPONSE"
+                android:padding="5dp"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>

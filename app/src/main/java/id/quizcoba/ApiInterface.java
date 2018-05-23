@@ -11,9 +11,9 @@ public interface ApiInterface {
     Call<ModelResponse> getSaldo(@Query("id") String id, @Query("passwd") String passwd);
 
     @POST("buat_account")
-    Call<Model> postAccount(@Query("id") String id, @Query("passwd") String passwd);
+    Call<ModelResponse> postAccount(@Query("id") String id, @Query("passwd") String passwd);
 
     @POST("transfer_coin")
-    Call<Model> transferCoin(@Query("id") String id, @Query("passwd") String passwd, @Query("id_tujuan") String id_tujuan, @Query("jumlah") String jumlah);
+    Call<ModelResponse> transferCoin(@Query("id") String id, @Query("passwd") String passwd, @Query("id_tujuan") String id_tujuan, @Query("jumlah") String jumlah);
 
 }
